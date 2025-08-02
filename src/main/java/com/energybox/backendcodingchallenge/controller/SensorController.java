@@ -3,11 +3,9 @@ package com.energybox.backendcodingchallenge.controller;
 import com.energybox.backendcodingchallenge.domain.Gateway;
 import com.energybox.backendcodingchallenge.domain.LastReading;
 import com.energybox.backendcodingchallenge.domain.Sensor;
-import com.energybox.backendcodingchallenge.dto.AssignSensorToGatewayDto;
-import com.energybox.backendcodingchallenge.dto.CreateSensorDto;
-import com.energybox.backendcodingchallenge.dto.GatewayDetailsDto;
-import com.energybox.backendcodingchallenge.dto.SensorDetailsDto;
+import com.energybox.backendcodingchallenge.dto.*;
 import com.energybox.backendcodingchallenge.service.SensorService;
+import exceptions.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
@@ -68,34 +66,34 @@ public class SensorController {
 
     @PutMapping("/{sensorId}/assign")
     public ResponseEntity<Object> assignSensorToGateway(@PathVariable Long sensorId,
-                                                              @RequestBody AssignSensorToGatewayDto assignSensorToGatewayDto) {
-        try{
-            Sensor sensor = this.sensorService.assignToGateway(
-                    sensorId,
-                    assignSensorToGatewayDto.getGatewayId());
-            SensorDetailsDto response = SensorDetailsDto.fromEntityObject(sensor);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        catch(Exception ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+                                                          @RequestBody AssignSensorToGatewayDto assignSensorToGatewayDto) throws Exception {
+        Sensor sensor = this.sensorService.assignToGateway(
+                sensorId,
+                assignSensorToGatewayDto.getGatewayId());
+        SensorDetailsDto response = SensorDetailsDto.fromEntityObject(sensor);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{sensorId}/read")
-    public ResponseEntity<List<SensorDetailsDto>> recordReading(@PathVariable Long sensorId,
-                                                                        @RequestBody AssignSensorToGatewayDto assignSensorToGatewayDto) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<LastReading> recordReading(@PathVariable Long sensorId,
+                                                                        @RequestBody LastReadingDto sensorReading) throws ResourceNotFoundException {
+        LastReading record = this.sensorService.recordLastReading(
+                sensorId,
+                sensorReading.getKey(),
+                sensorReading.getValue(),
+                sensorReading.getTimestamp()
+        );
+        return new ResponseEntity<>(record, HttpStatus.CREATED);
     }
 
     @GetMapping("/{sensorId}/last-readings")
-    public ResponseEntity<Object> getSensorLastReading(@PathVariable Long sensorId){
-        try{
-            List<LastReading> response = this.sensorService.getLastReading(sensorId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        catch (Exception ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Object> getSensorLastReading(@PathVariable Long sensorId) throws Exception {
+        List<LastReadingDto> response = this.sensorService.getLastReading(sensorId)
+                .stream()
+                .map(LastReadingDto::fromEntity)
+                .toList();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }

@@ -22,8 +22,3 @@ public class LastReading {
     private Sensor sensor;
 }
 
-@Data
-class SensorTypeKey implements Serializable {
-    Sensor sensor;
-    String key;
-}
