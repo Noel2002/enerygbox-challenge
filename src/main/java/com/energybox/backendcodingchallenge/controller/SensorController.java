@@ -27,23 +27,22 @@ public class SensorController {
     @GetMapping("")
     public ResponseEntity<List<SensorDetailsDto>> getAllSensors() {
         List<Sensor> sensors = this.sensorService.getAll();
+
         List<SensorDetailsDto> response = sensors.stream().map(SensorDetailsDto::fromEntityObject).toList();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createSensor(@RequestBody CreateSensorDto createSensorDto){
-        try{
-            Sensor sensor = new Sensor();
-            sensor.setTypes(createSensorDto.types());
-            Sensor createdSensor = this.sensorService.create(sensor, createSensorDto.gateway());
-            SensorDetailsDto response = SensorDetailsDto.fromEntityObject(createdSensor);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        }
-        catch (Exception ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Object> createSensor(@RequestBody CreateSensorDto createSensorDto) throws Exception {
+        Sensor sensor = new Sensor();
+        sensor.setTypes(createSensorDto.types());
 
+        Sensor createdSensor = this.sensorService.create(sensor, createSensorDto.gateway());
+
+        SensorWithGatewayDto response = SensorWithGatewayDto.fromEntityObject(createdSensor);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/gateway/{gatewayId}")
@@ -52,6 +51,7 @@ public class SensorController {
                 .stream()
                 .map(SensorDetailsDto::fromEntityObject)
                 .toList();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -70,20 +70,24 @@ public class SensorController {
         Sensor sensor = this.sensorService.assignToGateway(
                 sensorId,
                 assignSensorToGatewayDto.getGatewayId());
-        SensorDetailsDto response = SensorDetailsDto.fromEntityObject(sensor);
+        SensorWithGatewayDto response = SensorWithGatewayDto.fromEntityObject(sensor);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{sensorId}/read")
-    public ResponseEntity<LastReading> recordReading(@PathVariable Long sensorId,
+    public ResponseEntity<SensorWithLastReadings> recordReading(@PathVariable Long sensorId,
                                                                         @RequestBody LastReadingDto sensorReading) throws ResourceNotFoundException {
-        LastReading record = this.sensorService.recordLastReading(
+        Sensor sensor = this.sensorService.recordLastReading(
                 sensorId,
                 sensorReading.getKey(),
                 sensorReading.getValue(),
                 sensorReading.getTimestamp()
         );
-        return new ResponseEntity<>(record, HttpStatus.CREATED);
+
+        SensorWithLastReadings response = SensorWithLastReadings.fromEntity(sensor);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{sensorId}/last-readings")
@@ -92,6 +96,7 @@ public class SensorController {
                 .stream()
                 .map(LastReadingDto::fromEntity)
                 .toList();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

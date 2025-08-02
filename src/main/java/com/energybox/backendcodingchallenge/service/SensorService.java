@@ -83,7 +83,7 @@ public class SensorService {
 
     }
 
-    public LastReading recordLastReading(Long sensorId, String key, double value, LocalDateTime timestamp) throws ResourceNotFoundException {
+    public Sensor recordLastReading(Long sensorId, String key, double value, LocalDateTime timestamp) throws ResourceNotFoundException {
         Sensor sensor = this.sensorRepository.findById(sensorId).orElseThrow(()-> new ResourceNotFoundException("Sensor not found"));
         if(!sensor.getTypes().contains(key)) throw new ResourceNotFoundException("The sensor does not have the specified type");
         SensorTypeKey compositeKey = new SensorTypeKey(sensor, key);
@@ -103,6 +103,8 @@ public class SensorService {
             record.setValue(value);
         }
 
-        return this.lastReadingRepository.save(record);
+        this.lastReadingRepository.save(record);
+
+        return sensor;
     }
 }

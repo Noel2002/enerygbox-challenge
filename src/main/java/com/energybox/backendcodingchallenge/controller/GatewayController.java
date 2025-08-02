@@ -1,6 +1,8 @@
 package com.energybox.backendcodingchallenge.controller;
 
+import com.energybox.backendcodingchallenge.dto.CreateGatewayDto;
 import com.energybox.backendcodingchallenge.dto.GatewayDetailsDto;
+import com.energybox.backendcodingchallenge.dto.GatewayWithSensorsDto;
 import com.energybox.backendcodingchallenge.service.GatewayService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +26,32 @@ public class GatewayController {
 
     @Operation(summary = "create a gateway")
     @PostMapping("")
-    public ResponseEntity<GatewayDetailsDto> createGateway(@RequestBody Gateway gateway) {
+    public ResponseEntity<GatewayDetailsDto> createGateway(@RequestBody CreateGatewayDto gatewayDto) {
+        Gateway gateway = new Gateway();
+        gateway.setName(gatewayDto.getName());
+
         Gateway created = this.gatewayService.create(gateway);
-        GatewayDetailsDto response = new GatewayDetailsDto();
-        response.setId(created.getId());
+        GatewayDetailsDto response = GatewayDetailsDto.fromEntityObject(created);
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("")
     public ResponseEntity<List<GatewayDetailsDto>> getAllGateways(){
         List<Gateway> gateways = this.gatewayService.getAll();
+
         List<GatewayDetailsDto> response = gateways.stream().map(GatewayDetailsDto::fromEntityObject).toList();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/with-sensors/electrical")
-    public ResponseEntity<List<GatewayDetailsDto>> getGatewaysWithElectricalSensors(){
-        List<GatewayDetailsDto> response = this.gatewayService.getGatewaysWithElectricalSensor()
+    public ResponseEntity<List<GatewayWithSensorsDto>> getGatewaysWithElectricalSensors(){
+        List<GatewayWithSensorsDto> response = this.gatewayService.getGatewaysWithElectricalSensor()
                 .stream()
-                .map(GatewayDetailsDto::fromEntityObject)
+                .map(GatewayWithSensorsDto::fromEntityObject)
                 .toList();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

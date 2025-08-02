@@ -7,14 +7,16 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GatewayDetailsDto {
-    Long id;
+public class GatewayWithSensorsDto {
+    private Long id;
     private String name;
+    private List<Sensor> sensors;
 
-    public static GatewayDetailsDto fromEntityObject(Gateway gateway){
-        GatewayDetailsDto dto = new GatewayDetailsDto();
+    public static GatewayWithSensorsDto fromEntityObject(Gateway gateway){
+        GatewayWithSensorsDto dto = new GatewayWithSensorsDto();
         dto.setId(gateway.getId());
         dto.setName(gateway.getName());
+        dto.setSensors(gateway.getSensors());
 
         return dto;
     }
