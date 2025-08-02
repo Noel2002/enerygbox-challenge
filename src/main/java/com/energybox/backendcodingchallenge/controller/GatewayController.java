@@ -28,7 +28,7 @@ public class GatewayController {
         Gateway created = this.gatewayService.create(gateway);
         GatewayDetailsDto response = new GatewayDetailsDto();
         response.setId(created.getId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("")
