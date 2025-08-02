@@ -1,4 +1,4 @@
-package exceptions;
+package com.energybox.backendcodingchallenge.exceptions;
 
 public class DuplicateResourceException extends Exception{
     public DuplicateResourceException(String message){

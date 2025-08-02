@@ -2,8 +2,7 @@ package com.energybox.backendcodingchallenge.service;
 
 import com.energybox.backendcodingchallenge.domain.Gateway;
 import com.energybox.backendcodingchallenge.repository.GatewayRepository;
-import exceptions.DuplicateResourceException;
-import org.apache.commons.lang3.NotImplementedException;
+import com.energybox.backendcodingchallenge.exceptions.DuplicateResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

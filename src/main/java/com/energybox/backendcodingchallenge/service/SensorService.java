@@ -7,8 +7,7 @@ import com.energybox.backendcodingchallenge.domain.SensorTypeKey;
 import com.energybox.backendcodingchallenge.repository.GatewayRepository;
 import com.energybox.backendcodingchallenge.repository.LastReadingRepository;
 import com.energybox.backendcodingchallenge.repository.SensorRepository;
-import exceptions.ResourceNotFoundException;
-import org.apache.commons.lang3.NotImplementedException;
+import com.energybox.backendcodingchallenge.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

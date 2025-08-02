@@ -1,7 +1,7 @@
 package com.energybox.backendcodingchallenge.config;
 
-import exceptions.DuplicateResourceException;
-import exceptions.ResourceNotFoundException;
+import com.energybox.backendcodingchallenge.exceptions.DuplicateResourceException;
+import com.energybox.backendcodingchallenge.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
