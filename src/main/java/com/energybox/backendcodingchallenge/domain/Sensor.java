@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,4 +21,8 @@ public class Sensor {
     @JoinColumn(name = "gateway_id")
     @JsonIgnore
     Gateway gateway;
+    @OneToMany(mappedBy = "sensor")
+    @JsonIgnore
+    private List<LastReading> lastReadings = new ArrayList<>();
 }
+

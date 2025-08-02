@@ -1,5 +1,7 @@
 package com.energybox.backendcodingchallenge.controller;
 
+import com.energybox.backendcodingchallenge.domain.Gateway;
+import com.energybox.backendcodingchallenge.domain.LastReading;
 import com.energybox.backendcodingchallenge.domain.Sensor;
 import com.energybox.backendcodingchallenge.dto.AssignSensorToGatewayDto;
 import com.energybox.backendcodingchallenge.dto.CreateSensorDto;
@@ -11,6 +13,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -64,9 +67,35 @@ public class SensorController {
     }
 
     @PutMapping("/{sensorId}/assign")
-    public ResponseEntity<List<SensorDetailsDto>> assignSensorToGateway(@PathVariable Long sensorId,
+    public ResponseEntity<Object> assignSensorToGateway(@PathVariable Long sensorId,
                                                               @RequestBody AssignSensorToGatewayDto assignSensorToGatewayDto) {
+        try{
+            Sensor sensor = this.sensorService.assignToGateway(
+                    sensorId,
+                    assignSensorToGatewayDto.getGatewayId());
+            SensorDetailsDto response = SensorDetailsDto.fromEntityObject(sensor);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{sensorId}/read")
+    public ResponseEntity<List<SensorDetailsDto>> recordReading(@PathVariable Long sensorId,
+                                                                        @RequestBody AssignSensorToGatewayDto assignSensorToGatewayDto) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @GetMapping("/{sensorId}/last-readings")
+    public ResponseEntity<Object> getSensorLastReading(@PathVariable Long sensorId){
+        try{
+            List<LastReading> response = this.sensorService.getLastReading(sensorId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
