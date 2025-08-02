@@ -12,7 +12,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: energybox_user
-    url: jdbc:postgresql://localhost:5432/energybox_db
+    url: jdbc:postgresql://localhost:5433/energybox_db
     password: energybox_pass
   jpa:
     properties:
