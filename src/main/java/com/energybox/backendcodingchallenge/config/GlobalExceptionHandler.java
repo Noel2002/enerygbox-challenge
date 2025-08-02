@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleUnhandledExceptions(Exception ex){
-        logger.error(Arrays.toString(ex.getStackTrace()));
+        logger.error("Unhandled error: {}", ex.getMessage(), ex);
         return new ResponseEntity<>("Internal server error occurred!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
