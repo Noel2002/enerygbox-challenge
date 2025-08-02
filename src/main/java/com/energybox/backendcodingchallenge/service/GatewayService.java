@@ -2,6 +2,7 @@ package com.energybox.backendcodingchallenge.service;
 
 import com.energybox.backendcodingchallenge.domain.Gateway;
 import com.energybox.backendcodingchallenge.repository.GatewayRepository;
+import exceptions.DuplicateResourceException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,10 @@ public class GatewayService {
         this.gatewayRepository = gatewayRepository;
     }
 
-    public Gateway create(Gateway gateway){
+    public Gateway create(Gateway gateway) throws DuplicateResourceException {
+        if(this.gatewayRepository.existsByName(gateway.getName())){
+            throw new DuplicateResourceException("The gateway name already exists. Please use another name");
+        }
         return this.gatewayRepository.save(gateway);
     }
 

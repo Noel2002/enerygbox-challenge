@@ -1,5 +1,6 @@
 package com.energybox.backendcodingchallenge.config;
 
+import exceptions.DuplicateResourceException;
 import exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler({Exception.class})
-//    public ResponseEntity<Object> handleUnhandledExceptions(Exception ex){
-//        logger.error(Arrays.toString(ex.getStackTrace()));
-//        return new ResponseEntity<>("Internal server error occurred!", HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler({DuplicateResourceException.class})
+    public ResponseEntity<Object> handleBadRequestExceptions(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Object> handleUnhandledExceptions(Exception ex){
+        logger.error(Arrays.toString(ex.getStackTrace()));
+        return new ResponseEntity<>("Internal server error occurred!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

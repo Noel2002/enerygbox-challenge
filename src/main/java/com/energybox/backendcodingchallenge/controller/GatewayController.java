@@ -4,6 +4,7 @@ import com.energybox.backendcodingchallenge.dto.CreateGatewayDto;
 import com.energybox.backendcodingchallenge.dto.GatewayDetailsDto;
 import com.energybox.backendcodingchallenge.dto.GatewayWithSensorsDto;
 import com.energybox.backendcodingchallenge.service.GatewayService;
+import exceptions.DuplicateResourceException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -26,7 +27,7 @@ public class GatewayController {
 
     @Operation(summary = "create a gateway")
     @PostMapping("")
-    public ResponseEntity<GatewayDetailsDto> createGateway(@RequestBody CreateGatewayDto gatewayDto) {
+    public ResponseEntity<GatewayDetailsDto> createGateway(@RequestBody CreateGatewayDto gatewayDto) throws DuplicateResourceException {
         Gateway gateway = new Gateway();
         gateway.setName(gatewayDto.getName());
 

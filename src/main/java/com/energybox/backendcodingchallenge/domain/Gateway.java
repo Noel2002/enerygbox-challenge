@@ -14,6 +14,7 @@ public class Gateway {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(unique = true)
     String name;
     @OneToMany(mappedBy = "gateway")
     @JsonIgnore
